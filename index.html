@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#080b14">
+  <title>Chat mondial</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Fond animé -->
+  <div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <!-- Écran de choix / changement de pseudo -->
+  <div id="login" class="login">
+    <form id="login-form" class="login-card" autocomplete="off">
+      <div class="logo">💬</div>
+      <h1>Chat mondial</h1>
+      <p class="subtitle">Choisis un pseudo pour rejoindre la conversation.</p>
+      <input id="login-name" type="text" maxlength="20" minlength="2"
+             placeholder="Ton pseudo" required autocapitalize="off" spellcheck="false">
+      <p id="login-error" class="error" hidden></p>
+      <div class="login-actions">
+        <button type="button" id="login-cancel" class="btn ghost" hidden>Annuler</button>
+        <button type="submit" class="btn primary">Entrer dans le chat</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Application -->
+  <div id="app" class="app" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon">💬</span>
+        <div class="brand-text">
+          <strong>Chat mondial</strong>
+          <small id="status" data-on="false">Connexion…</small>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="online-btn" class="pill" type="button" aria-haspopup="true">
+          <span class="dot"></span><span id="online-count">0</span>&nbsp;en ligne
+        </button>
+
+        <button id="sound-btn" class="icon-btn" type="button" aria-pressed="true" title="Couper les sons" aria-label="Activer ou couper les sons">
+          <svg class="ic-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          <svg class="ic-off" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/></svg>
+        </button>
+
+        <button id="rename-btn" class="pill" type="button" title="Changer de pseudo">
+          ✏️ <span id="me-name" class="me-name"></span>
+        </button>
+      </div>
+
+      <div id="online-panel" class="panel" hidden>
+        <h3>Utilisateurs en ligne</h3>
+        <ul id="online-list"></ul>
+      </div>
+    </header>
+
+    <div class="chat">
+      <main id="messages" class="messages" aria-live="polite">
+        <div id="empty" class="sys">Chargement…</div>
+      </main>
+      <button id="jump" class="jump" type="button" hidden>Nouveaux messages ↓</button>
+    </div>
+
+    <form id="composer" class="composer" autocomplete="off">
+      <div id="emoji-panel" class="emoji-panel" hidden>
+        <div id="emoji-grid" class="emoji-grid"></div>
+      </div>
+
+      <div class="field">
+        <button id="emoji-btn" class="icon-btn flat" type="button" aria-label="Choisir un emoji" title="Emojis">😊</button>
+        <input id="input" type="text" maxlength="500" placeholder="Écris un message…" enterkeyhint="send">
+        <span id="counter" class="counter" hidden></span>
+      </div>
+
+      <button id="send" class="send" type="submit" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg>
+        <span>Envoyer</span>
+      </button>
+    </form>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
