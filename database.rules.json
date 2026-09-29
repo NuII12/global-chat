@@ -1,0 +1,71 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "users": {
+      ".read": "auth != null && auth.token.email_verified === true",
+      "$uid": {
+        ".write": "auth != null && auth.token.email_verified === true && auth.uid === $uid",
+        ".validate": "newData.hasChild('name')",
+        "name": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20" },
+        "photo": { ".validate": "newData.isString() && newData.val().length < 80000" },
+        "createdAt": { ".validate": "newData.isNumber()" },
+        "$other": { ".validate": false }
+      }
+    },
+
+    "usernames": {
+      "$n": {
+        ".read": "auth != null && auth.token.email_verified === true",
+        ".write": "auth != null && auth.token.email_verified === true && ((!data.exists() && newData.val() === auth.uid) || (data.val() === auth.uid && !newData.exists()))",
+        ".validate": "newData.isString()"
+      }
+    },
+
+    "presence": {
+      ".read": "auth != null && auth.token.email_verified === true",
+      "$uid": {
+        ".write": "auth != null && auth.token.email_verified === true && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['name', 'ts'])",
+        "name": { ".validate": "newData.isString() && newData.val().length <= 20" },
+        "ts": { ".validate": "newData.isNumber()" },
+        "$other": { ".validate": false }
+      }
+    },
+
+    "lastSent": {
+      "$uid": {
+        ".write": "auth != null && auth.token.email_verified === true && auth.uid === $uid",
+        ".validate": "newData.val() === now"
+      }
+    },
+
+    "images": {
+      "$id": {
+        ".read": "auth != null && auth.token.email_verified === true",
+        ".write": "auth != null && auth.token.email_verified === true && !data.exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['uid', 'data'])",
+        "uid": { ".validate": "newData.val() === auth.uid" },
+        "data": { ".validate": "newData.isString() && newData.val().beginsWith('data:image/') && newData.val().length < 700000" },
+        "$other": { ".validate": false }
+      }
+    },
+
+    "messages": {
+      ".read": "auth != null && auth.token.email_verified === true",
+      "$id": {
+        ".write": "auth != null && auth.token.email_verified === true && !data.exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['uid', 'name', 'ts']) && (newData.hasChild('text') || newData.hasChild('img')) && (!root.child('lastSent').child(auth.uid).exists() || now - root.child('lastSent').child(auth.uid).val() >= 700)",
+        "uid": { ".validate": "newData.val() === auth.uid" },
+        "name": { ".validate": "newData.val() === root.child('users').child(auth.uid).child('name').val()" },
+        "ts": { ".validate": "newData.val() === now" },
+        "text": { ".validate": "newData.isString() && newData.val().length <= 500" },
+        "img": { ".validate": "newData.isString() && newData.val().length <= 40 && root.child('images').child(newData.val()).exists()" },
+        "iw": { ".validate": "newData.isNumber()" },
+        "ih": { ".validate": "newData.isNumber()" },
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}
